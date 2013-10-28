@@ -641,3 +641,8 @@ article.smaller q::after {
 .prettyprint .var { /* a declaration; a variable name */
   color: rgb(127, 0, 127);
 }
+
+.center {
+  text-align: center;
+  width: 100%;
+}

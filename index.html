@@ -63,6 +63,220 @@
 
       <article>
         <h1>
+          Homescreen panning
+        </h1>
+      </article>
+
+      <article>
+        <h3>
+          Functional requirements
+        </h3>
+        <ul>
+          <li>Icons will be placed in <strong style="color: orange">different pages</strong></li>
+          <ul>
+            <li>Each page will show a <strong style="color: orange">grid layout</strong> composed by them</li>
+          </ul>
+          <li>Users will be able to <strong style="color: orange">navigate among different pages</strong></li>
+          <ul>
+            <li>Minimum <strong style="color: orange">55 FPS</strong></li>
+          </ul>
+          <li>Implement a <strong style="color: orange">drop shadow</strong> for icon apps</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Dummy Approach
+        </h3>
+        <div class="center">
+          <img style="padding-top: 5rem" src="images/panning_dummy_approach.png"></img>
+        </div>
+      </article>
+
+      <article>
+        <h3>
+          Dummy Approach - Markup
+        </h3>
+        <ul>
+          <li>Huge wrapper containing all pages (orange line in chart)</li>
+          <ul>
+            <li>Page containers fitted to the screen resolution</li>
+            <li>Icons are items for unordered lists</li>
+          </ul>
+        </ul>
+        <pre>&lt;section id="wrapper"&gt;
+  &lt;div class="page"&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Icon&lt;/li&gt;
+      &lt;!-- More icons... --&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;!-- Rest of pages --&gt;
+&lt;/section&gt;
+        </pre>
+      </article>
+
+      <article>
+        <h3>
+          Dummy Approach - Styles
+        </h3>
+        <pre>#wrapper {
+  height: calc(100% - 7rem);
+}
+
+#wrapper .page {
+  width: 100%; height: 100%;
+  display: inline-block;
+}
+        </pre>
+        <ul>
+          <li>Drop shadows defined by means of box-shadow property</li>
+        </ul>
+        <pre>#wrapper .page > ul > li .icon {
+  box-shadow: 1rem 1rem .5rem #888888;
+}
+          </pre>
+      </article>
+
+      <article>
+        <h3>
+          Dummy Approach - Behavior
+        </h3>
+        <ul>
+          <li>Wrapper translated in X-axis (CSS3 Transformations)</li>
+          <ul>
+            <li>Listening for all touch events  and calculate gesture direction for each touchmove event received</li>
+          </ul>
+        </ul>
+        <pre>switch (evt.type) {
+  case 'touchstart':
+    // Save start postion, initialize deltaX,...
+  case 'touchmove':
+    // Calculate startX, deltaX, threshold to start panning,
+    // direction of the gesture,...
+    wrapper.MozTransform = 'translateX(' + deltaX) + 'px)';
+  case 'touchend':
+    // Actually the user clicked on icon or was panning?
+}
+        </pre>
+      </article>
+
+      <article>
+        <h3>
+          Why it is not a good solution
+        </h3>
+        <ul>
+          <li>Frame rate about <strong style="color: red">25-30</strong> per second</li>
+          <ul>
+            <li>Continous reflows while the pages are translated</li>
+            <li>Several allocations while panning (tons of calculations)</li>
+            <li>High consume of memory (all pages in memory)</li>
+            <li>Some CSS properties are not completely optimized in Gecko</li>
+          </ul>
+        </ul>
+        <div class="center">
+          <img src="images/fail.png"></img>
+        </div>
+      </article>
+
+      <article>
+        <h3>
+          Final implementation
+        </h3>
+        <div class="center">
+          <img style="padding-top: 5rem" src="images/panning_final_implementation.png"></img>
+        </div>
+      </article>
+
+      <article>
+        <h3>
+          Avoid reflows!
+        </h3>
+        <ul>
+          <li>DOM Elements bigger than screen WILL be repainted while translating or scaling</li>
+          <li>The performance translating three pages at the same time is better than translating the whole wrapper which is bigger than the screen. Why? Three containers better than one, really? :(</li>
+          <ul>
+            <li>
+              Gecko applies cache to DOM elements during translations avoiding continuous reflows
+            </li>
+          </ul>
+          <li>
+            If you want to achieve a good frame rate, please don't try to change styles while transformations
+          </li>
+          <li>
+            Take a look to <a href="https://developer.mozilla.org/es/docs/DOM/window.requestAnimationFrame">requestAnimationFrame</a>
+          </li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Avoid allocations in critical code I
+        </h3>
+        <ul>
+          <li>Spend your time re-thinking your code</li>
+          <li>
+            Dedicated handlers for panning depending on relevants pages
+            based on the direction of the inputs.
+          </li>
+          <li>
+            <a href="https://github.com/mozilla-b2g/gaia/blob/master/apps/homescreen/js/grid.js#L219">
+              Source code
+            </a>
+          </li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Avoid allocations in critical code II
+        </h3>
+        <div class="center">
+          <img style="padding-top: 2rem" src="images/panning_touch_move.png"></img>
+        </div>
+      </article>
+
+      <article>
+        <h3>
+          Pay attention to memory consumption
+        </h3>
+        <ul>
+          <li>Just previous, next and current pages are displayed</li>
+          <li>Rest of pages are not consuming memory by means of display property to none</li>
+          <li>Don't listen for all events all the time:</li>
+          <ul>
+            <li>Start listening for touchstart</li>
+            <li>Received this one, you can add handlers for touchmove and touchend. After that remove the previous one</li>
+            <li>When the user releases his finger, you can remove those handlers and add again the listener for touchstart</li>
+          </ul>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Becareful with some CSS properties
+        </h3>
+        <ul>
+          <li>Sadly not all CSS properties are optimized in Gecko</li>
+          <li>What properties you should avoid in transformations?</li>
+          <ul>
+            <li>Opacity changes</li>
+            <li>Box-shadows and text-shadows</li>
+            <li>SVG masks and filters</li>
+          </ul>
+          <li>
+            As you know, one requeriment was to apply a drop shadow to app icons. We had to paint our
+            icons by means of canvas elements. Once they are created, images are added to the DOM with blobs
+            generated from them
+          </li>
+          <ul>
+            <li>Read about <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL.createObjectURL">URL.createObjectURL</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL.revokeObjectURL">URL.revokeObjectURL</a></li>
+          </ul>
+        </ul>
+      </article>
+
+      <article>
+        <h1>
           What's coming
         </h1>
         <p>
