@@ -654,3 +654,9 @@ article.smaller q::after {
   margin: 2rem 2.6rem 0 0;
   box-shadow: 0 10px 6px -6px #777;
 }
+
+.video {
+  width: 480px;
+  height: 360px;
+  margin-top: 5rem;
+}
