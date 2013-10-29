@@ -107,19 +107,19 @@
           <li>Huge wrapper containing all pages (orange line in chart)</li>
           <ul>
             <li>Page containers fitted to the screen resolution</li>
-            <li>Icons are items for unordered lists</li>
+            <li>Unordered lists represent grid of icons</li>
           </ul>
         </ul>
         <pre>&lt;section id="wrapper"&gt;
   &lt;div class="page"&gt;
     &lt;ul&gt;
-      &lt;li&gt;Icon&lt;/li&gt;
+      &lt;li&gt;Icon 1&lt;/li&gt;
+      &lt;li&gt;Icon 2&lt;/li&gt;
       &lt;!-- More icons... --&gt;
     &lt;/ul&gt;
   &lt;/div&gt;
   &lt;!-- Rest of pages --&gt;
-&lt;/section&gt;
-        </pre>
+&lt;/section&gt;</pre>
       </article>
 
       <article>
@@ -127,21 +127,20 @@
           Dummy Approach - Styles
         </h3>
         <pre>#wrapper {
-  height: calc(100% - 7rem);
+  height: calc(100% - 7rem); /* 7rem is the dock height */
 }
 
 #wrapper .page {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   display: inline-block;
-}
-        </pre>
+}</pre>
         <ul>
-          <li>Drop shadows defined by means of box-shadow property</li>
+          <li>Drop shadows defined by means of the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow">box-shadow</a> property</li>
         </ul>
         <pre>#wrapper .page > ul > li .icon {
   box-shadow: 1rem 1rem .5rem #888888;
-}
-          </pre>
+}</pre>
       </article>
 
       <article>
@@ -156,15 +155,14 @@
         </ul>
         <pre>switch (evt.type) {
   case 'touchstart':
-    // Save start postion, initialize deltaX,...
+    // Initialize starting postion, deltaX,...
   case 'touchmove':
     // Calculate startX, deltaX, threshold to start panning,
     // direction of the gesture,...
-    wrapper.MozTransform = 'translateX(' + deltaX) + 'px)';
+    wrapper.MozTransform = 'translateX(' + deltaX + 'px)';
   case 'touchend':
-    // Actually the user clicked on icon or was panning?
-}
-        </pre>
+    // Actually the user clicked on icon or he was panning?
+}</pre>
       </article>
 
       <article>
@@ -175,7 +173,7 @@
           Frame rate about <strong style="color: red">25-30</strong> per second
         </h4>
         <ul>
-          <li>Continous reflows while the pages are translated</li>
+          <li>Continous reflows while the pages are being translated</li>
           <li>Several allocations while panning (tons of calculations)</li>
           <li>High consume of memory (all pages in memory)</li>
           <li>Some CSS properties are not completely optimized in Gecko</li>
@@ -230,6 +228,14 @@
               Source code
             </a>
           </li>
+          <li>
+            If your requirements allow you <a href="https://developer.mozilla.org/en-US/docs/Web/API/event.preventDefault">prenvent the default behavior</a> for touchmove events, you can save 16ms
+          </li>
+          <ul>
+            <li>
+              Gaia's homescreen cannot do this because it needs to listen for contexmenu events (long press)
+            </li>
+          </ul>
         </ul>
       </article>
 
@@ -248,12 +254,13 @@
         </h3>
         <ul>
           <li>Just previous, next and current pages are displayed</li>
-          <li>Rest of pages are not consuming memory by means of display property to none</li>
-          <li>Don't listen for all events all the time:</li>
+          <li>Rest of pages are not consuming memory</li>
+          <pre>display: none</pre>
+          <li>Don't listen for all events everytime/everywhere:</li>
           <ul>
             <li>Start listening for touchstart</li>
-            <li>Received this one, you can add handlers for touchmove and touchend. After that remove the previous one</li>
-            <li>When the user releases his finger, you can remove those handlers and add again the listener for touchstart</li>
+            <li>Received this one, you can add handlers for touchmove and touchend. After that, remove the previous one</li>
+            <li>When users release the finger, you can remove those handlers and add again the listener for touchstart</li>
           </ul>
         </ul>
       </article>
@@ -268,11 +275,11 @@
           <ul>
             <li>Opacity changes</li>
             <li>Box-shadows and text-shadows</li>
-            <li>SVG masks and filters</li>
+            <li>SVG <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/mask">masks</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/filter">filters</a></li>
           </ul>
           <li>
             As you know, one requeriment was to apply a drop shadow to app icons. We had to paint our
-            icons by means of canvas elements. Once they are created, images are added to the DOM with blobs
+            icons by means of <a href="https://developer.mozilla.org/en/docs/HTML/Canvas">HTMLCanvasElement</a>. Once they are created, images are added to the DOM with blobs
             generated from them
           </li>
           <ul>
@@ -286,7 +293,7 @@
           Hardware restrictions vs Imagination
         </h3>
         <ul>
-          <li>Faster panning based on prediction and movement velocity</li>
+          <li>Faster panning based on prediction and velocity</li>
           <li>Not covered by this presentation</li>
           <ul>
             <li><a href="https://github.com/mozilla-b2g/gaia/blob/master/apps/homescreen/js/grid.js#L98">Source code</a></li>
@@ -334,7 +341,7 @@
             <li>Actually the scaled icon is not consuming touch/mouse events so the icon under the finger is known thanks to next trick</li>
             <pre><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events">pointer-events</a>: none</pre>
           </ul>
-          <li>The re-arrange will be done between the hidden and overlapped icons by means of</li>
+          <li>The re-arrange will be done between the hidden and overlapped icons</li>
           <pre><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node.insertBefore">Node.insertBefore</a></pre>
         </ul>
       </article>
@@ -347,15 +354,13 @@
           Frame rate about <strong style="color: red">15-20</strong> per second
         </h4>
         <ul>
-          <li>Continous reflows while the icons are re-arranging</li>
+          <li>Continous reflows while the icons are being re-arranged</li>
           <li>No smooth solution</li>
         </ul>
         <div class="center">
           <img src="images/fail.png"></img>
         </div>
-        <ul>
-          <li>Although the hidden and cloned icons was a good approach</li>
-        </ul>
+        <p>"Although the hidden and cloned icons was a good approach"</p>
       </article>
 
       <article>
@@ -366,10 +371,9 @@
           <li>Shallow copy of the children icon list (children list is alive!)</li>
           <pre>
 var icons = this.olist.children;
-var sIcons = Array.prototype.slice.call(icons, 0, icons.length);
-          </pre>
-          <li>Calculate icons between hidden and overlapped icons</li>
-          <li>Apply translations to them to reach the correct new location (upward, forward,...). When the transition is finished (transitionend event)</li>
+var sIcons = Array.prototype.slice.call(icons, 0, icons.length);</pre>
+          <li>Calculate what icons are between the hidden and overlapped icons</li>
+          <li>Apply translations to them to reach the new location (upward, forward,...). When the transition is finished (transitionend event)</li>
           <ul>
             <li>Save new locations in dateset attribute for each icon to be ready for consecutive translations</li>
             <ul>
@@ -401,10 +405,9 @@ var sIcons = Array.prototype.slice.call(icons, 0, icons.length);
 document.dispatchEvent(new <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">CustomEvent</a>('ongridready'));
 document.addEventListener('ongridready', function onGridReady() {
   // The animation of re-arrange finishes
-});
-          </pre>
+});</pre>
           <li>
-            Don't forget to remove listeners for transitionend, animationend, etc... in order no to consume more memory
+            Don't forget to remove listeners for <a href="https://developer.mozilla.org/en-US/docs/Web/Reference/Events/transitionend">transitionend</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/Reference/Events/animationend">animationend</a>, etc... in order no to consume more memory
           </li>
         </ul>
       </article>
