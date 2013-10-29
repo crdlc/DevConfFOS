@@ -181,7 +181,8 @@ body {
 /* Slide styles */
 
 .slides.template-default article.biglogo {
-  background: white url(images/firefoxBig.jpg) no-repeat;
+  background: white url(images/firefoxBig.png) bottom right no-repeat;
+  background-size: 450px;
 }
 
 .slides.template-default article.biglogo2 {
