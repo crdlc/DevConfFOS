@@ -341,13 +341,65 @@
           Frame rate about <strong style="color: red">15-20</strong> per second
         </h4>
         <ul>
-          <li>Continous reflows while the icons were re-arranged</li>
+          <li>Continous reflows while the icons are re-arranging</li>
+          <li>No smooth solution</li>
         </ul>
         <div class="center">
           <img src="images/fail.png"></img>
         </div>
         <ul>
           <li>Although the hidden and cloned icons was a good approach</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Final implementation - Re-arrange I
+        </h3>
+        <ul>
+          <li>Shallow copy of the children icon list (children list is alive!)</li>
+          <pre>
+var icons = this.olist.children;
+var sIcons = Array.prototype.slice.call(icons, 0, icons.length);
+          </pre>
+          <li>Calculate icons between hidden and overlapped icons</li>
+          <li>Apply translations to them to reach the correct new location (upward, forward,...). When the transition is finished (transitionend event)</li>
+          <ul>
+            <li>Save new locations in dateset attribute for each icon to be ready for consecutive translations</li>
+            <ul>
+              <li>
+                <a href="https://github.com/mozilla-b2g/gaia/blob/master/apps/homescreen/js/page.js#L889">Source code</a>
+              </li>
+            </ul>
+          </ul>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Final implementation - Re-arrange II
+        </h3>
+        <ul>
+          <ul>
+            <li>
+              Set up the new order in our list by means of splice method
+            </li>
+            <ul>
+              <li>
+                <a href="https://github.com/mozilla-b2g/gaia/blob/master/apps/homescreen/js/page.js#L824">Source code</a>
+              </li>
+            </ul>
+          </ul>
+          <li>The dragdrop library is decoupled from grid component so how to know when the grid is ready to apply next animation?</li>
+          <pre>
+document.dispatchEvent(new <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">CustomEvent</a>('ongridready'));
+document.addEventListener('ongridready', function onGridReady() {
+  // The animation of re-arrange finishes
+});
+          </pre>
+          <li>
+            Don't forget to remove listeners for transitionend, animationend, etc... in order no to consume more memory
+          </li>
         </ul>
       </article>
 
