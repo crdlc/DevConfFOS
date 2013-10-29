@@ -165,14 +165,14 @@
         <h3>
           Why it is not a good solution
         </h3>
+        <h4>
+          Frame rate about <strong style="color: red">25-30</strong> per second
+        </h4>
         <ul>
-          <li>Frame rate about <strong style="color: red">25-30</strong> per second</li>
-          <ul>
-            <li>Continous reflows while the pages are translated</li>
-            <li>Several allocations while panning (tons of calculations)</li>
-            <li>High consume of memory (all pages in memory)</li>
-            <li>Some CSS properties are not completely optimized in Gecko</li>
-          </ul>
+          <li>Continous reflows while the pages are translated</li>
+          <li>Several allocations while panning (tons of calculations)</li>
+          <li>High consume of memory (all pages in memory)</li>
+          <li>Some CSS properties are not completely optimized in Gecko</li>
         </ul>
         <div class="center">
           <img src="images/fail.png"></img>
@@ -285,6 +285,69 @@
           <ul>
             <li><a href="https://github.com/mozilla-b2g/gaia/blob/master/apps/homescreen/js/grid.js#L98">Source code</a></li>
           </ul>
+        </ul>
+      </article>
+
+      <article>
+        <h1>
+          Homescreen drag&drop
+        </h1>
+      </article>
+
+      <article>
+        <h3>
+          Functional requirements
+        </h3>
+        <ul>
+          <li>Users is able to select an icon by long pressing it and <strong style="color: orange">drag it to a different location</strong></li>
+          <li>Icons will be rearranged <strong style="color: orange">smoothly</strong></li>
+          <li>Icons will be zoomed-in when users press and hold them</li>
+          <li>Icons will be zoomed-out when users release them</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Dummy Approach
+        </h3>
+        <div class="center">
+          <iframe id="dragdropdemo" src="dragdrop/index.html" scrolling="no" frameborder="0"></iframe>
+        </div>
+      </article>
+
+      <article>
+        <h3>
+          Dummy Approach - How it works
+        </h3>
+        <h4>
+          The idea is based on two pillars
+        </h4>
+        <ul>
+          <li>Hide the real draggable icon and create a clone from it which will be scaled and translated</li>
+          <ul>
+            <li>Actually the scaled icon is not consuming touch/mouse events so the icon under the finger is known thanks to next trick</li>
+            <pre><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events">pointer-events</a>: none</pre>
+          </ul>
+          <li>The re-arrange will be done between the hidden and overlapped icons by means of</li>
+          <pre><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node.insertBefore">Node.insertBefore</a></pre>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Why it is not a good solution
+        </h3>
+        <h4>
+          Frame rate about <strong style="color: red">15-20</strong> per second
+        </h4>
+        <ul>
+          <li>Continous reflows while the icons were re-arranged</li>
+        </ul>
+        <div class="center">
+          <img src="images/fail.png"></img>
+        </div>
+        <ul>
+          <li>Although the hidden and cloned icons was a good approach</li>
         </ul>
       </article>
 

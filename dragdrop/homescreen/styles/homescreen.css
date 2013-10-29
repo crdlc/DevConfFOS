@@ -1,0 +1,130 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 100%;
+}
+
+* {
+  -moz-user-select:none;
+}
+
+.main {
+  width: 100%;
+  height: 100%;
+}
+
+.counter {
+  width: 100%;
+  height: 5%;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #fff;
+  display: none;
+}
+
+.apps {
+  position: relative;
+  width: 100%;
+  height: 95%;
+  overflow: hidden;
+}
+
+  .apps > div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  .apps ol {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    margin-top: 2.5%;
+  }
+
+  .apps ol > li {
+    position: relative;
+    width: 25%;
+    display: inline-block;
+    float: left;
+    text-align: center;
+    padding-bottom: 2%;
+  }
+
+  .apps ol > li div {
+    height: 100%;
+    width: 100%;
+  }
+
+  .apps ol > li div.shader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  .apps ol > li span.options {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25%;
+    height: 20%;
+    margin-left: 5%;
+    z-index: 2;
+    background: url(../resources/images/menu.png) no-repeat right bottom;
+  }
+
+  .apps[data-mode = 'normal'] ol > li span.options {
+    display: none;
+  }
+
+  .apps img {
+    max-width: 80%;
+    width: 80%;
+  }
+
+  .apps span {
+    text-transform: capitalize;
+    font-size: 1em;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 4px #000000;
+  }
+
+  .apps ol > li[data-dragging] {
+    opacity: 0;
+  }
+
+  .apps .draggableElem {
+    z-index: 10000;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    width: 25%;
+  }
+
+  .apps .draggableElem img {
+    -moz-transform: scale(1.4);
+  }
+
+  .apps .draggableElem span {
+    font-size: 1.2em;
+    text-shadow: 2px 6px 10px 2px rgb(0, 0, 0);
+  }
+
+div[data-transitioning] {
+  -moz-transition: -moz-transform .2s ease-in;
+}
+
+div[data-position = 'left'] {
+  -moz-transform: translateX(-100%);
+}
+
+div[data-position = 'right'] {
+  -moz-transform: translateX(100%);
+}

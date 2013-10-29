@@ -646,3 +646,11 @@ article.smaller q::after {
   text-align: center;
   width: 100%;
 }
+
+#dragdropdemo {
+  width: 320px;
+  height: 480px;
+  border-radius: 1rem;
+  margin: 2rem 2.5rem 0 0;
+  box-shadow: 0 10px 6px -6px #777;
+}

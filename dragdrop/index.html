@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        background: url(homescreen/resources/images/background.png) repeat left top;
+      }
+
+      #homescreen {
+        position: absolute;
+        top: 5%;
+        height: 85%;
+        width: 100%;
+        border: 0;
+      }
+
+      header {
+        padding-top: 2px;
+        text-align: center;
+        font-weight: bold;
+        color: #FFF;
+      }
+
+      footer {
+        position: absolute;
+        top: 90%;
+        text-align: center;
+        width: 100%;
+        font-weight: bold;
+        color: #ccc;
+        margin-top: 3%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header></header>
+    <iframe id="homescreen" src="homescreen/homescreen.html"></iframe>
+    <footer>
+      <button onClick="document.querySelector('#homescreen').contentWindow.owd.GridManager.setMode('normal')">HOME</button>
+    </footer>
+  </body>
+</html>
