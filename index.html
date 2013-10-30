@@ -36,6 +36,9 @@
         </h1>
         <hr/>
         <p>
+          DevConf Second Edition, 6th of November
+        </p>
+        <p>
           Jose Manuel Cantera and Cristian Rodríguez
         </p>
       </article>
@@ -68,6 +71,13 @@
       </article>
 
       <article>
+        <h3>
+          Homescreen Architecture Overview
+        </h3>
+        <p>Classes diagram</p>
+      </article>
+
+      <article>
         <h1>
           Homescreen panning
         </h1>
@@ -78,16 +88,13 @@
           Functional requirements
         </h3>
         <ul>
-          <li>Icons will be placed in <strong style="color: orange">different pages</strong></li>
-          <ul>
-            <li>Each page will show a <strong style="color: orange">grid layout</strong> composed by them</li>
-          </ul>
-          <li>Users will be able to <strong style="color: orange">navigate among different pages</strong></li>
-          <ul>
-            <li>Minimum <strong style="color: orange">55 FPS</strong></li>
-          </ul>
+          <li>Icons will be placed in <strong style="color: orange">different pages</strong> (grid layout)</li>
+          <li>Users will be able to <strong style="color: orange">navigate among different pages</strong> (55 FPS)</li>
           <li>Implement a <strong style="color: orange">drop shadow</strong> for icon apps</li>
         </ul>
+        <div class="center">
+          <img width="260px" style="padding-top: .6rem" src="images/home.png"></img>
+        </div>
       </article>
 
       <article>
@@ -97,6 +104,9 @@
         <div class="center">
           <img style="padding-top: 5rem" src="images/panning_dummy_approach.png"></img>
         </div>
+        <ul>
+          <li>This image represents where the pages are located when the current page is the second</li>
+        </ul>
       </article>
 
       <article>
@@ -150,18 +160,18 @@
         <ul>
           <li>Wrapper translated in X-axis (CSS3 Transformations)</li>
           <ul>
-            <li>Listening for all touch events  and calculate gesture direction for each touchmove event received</li>
+            <li>Listening for touchstart event in wrapper and for touchmove and touchend in window</li>
           </ul>
         </ul>
         <pre>switch (evt.type) {
   case 'touchstart':
-    // Initialize starting postion, deltaX,...
+    // Initialize starting position, deltaX,...
   case 'touchmove':
     // Calculate startX, deltaX, threshold to start panning,
     // direction of the gesture,...
-    wrapper.MozTransform = 'translateX(' + deltaX + 'px)';
+    wrapper.style.MozTransform = 'translateX(' + deltaX + 'px)';
   case 'touchend':
-    // Actually the user clicked on icon or he was panning?
+    // Did the user click on an icon or was he panning?
 }</pre>
       </article>
 
@@ -190,6 +200,9 @@
         <div class="center">
           <img style="padding-top: 5rem" src="images/panning_final_implementation.png"></img>
         </div>
+        <ul>
+          <li>At the beginning the first page is translated to 0 and the others to 100% (right). This image represents where the pages are located when the current page is the second.</li>
+        </ul>
       </article>
 
       <article>
@@ -221,7 +234,7 @@
           <li>Spend your time re-thinking your code</li>
           <li>
             Dedicated handlers for panning depending on relevants pages
-            based on the direction of the inputs.
+            based on the direction of the inputs
           </li>
           <li>
             <a href="https://github.com/mozilla-b2g/gaia/blob/master/apps/homescreen/js/grid.js#L219">
@@ -229,7 +242,7 @@
             </a>
           </li>
           <li>
-            If your requirements allow you <a href="https://developer.mozilla.org/en-US/docs/Web/API/event.preventDefault">prenvent the default behavior</a> for touchmove events, you can save 16ms
+            If your requirements allow you <a href="https://developer.mozilla.org/en-US/docs/Web/API/event.preventDefault">prevent the default behavior</a> for touchmove events, you can save 16ms
           </li>
           <ul>
             <li>
@@ -244,7 +257,7 @@
           Avoid allocations in critical code II
         </h3>
         <div class="center">
-          <img style="padding-top: 2rem" src="images/panning_touch_move.png"></img>
+          <img style="padding-top: 1rem" src="images/panning_touch_move.png"></img>
         </div>
       </article>
 
@@ -258,8 +271,8 @@
           <pre>display: none</pre>
           <li>Don't listen for all events everytime/everywhere:</li>
           <ul>
-            <li>Start listening for touchstart</li>
-            <li>Received this one, you can add handlers for touchmove and touchend. After that, remove the previous one</li>
+            <li>Start listening for touchstart in the parent of the pages</li>
+            <li>Received this one, you can add handlers for touchmove and touchend (window object). After that, remove the previous one</li>
             <li>When users release the finger, you can remove those handlers and add again the listener for touchstart</li>
           </ul>
         </ul>
@@ -271,9 +284,9 @@
         </h3>
         <ul>
           <li>Sadly not all CSS properties are optimized in Gecko</li>
-          <li>What properties you should avoid in transformations?</li>
+          <li>What properties you should avoid translating or scaling elements?</li>
           <ul>
-            <li>Opacity changes</li>
+            <li>Opacity (elements with opacity are harder to translate)</li>
             <li>Box-shadows and text-shadows</li>
             <li>SVG <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/mask">masks</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/filter">filters</a></li>
           </ul>
@@ -293,7 +306,7 @@
           Hardware restrictions vs Imagination
         </h3>
         <ul>
-          <li>Faster panning based on prediction and velocity</li>
+          <li>Improve the experience predicting the movement based on an extra motion (velocity)</li>
           <li>Not covered by this presentation</li>
           <ul>
             <li><a href="https://github.com/mozilla-b2g/gaia/blob/master/apps/homescreen/js/grid.js#L98">Source code</a></li>
@@ -355,7 +368,7 @@
         </h4>
         <ul>
           <li>Continous reflows while the icons are being re-arranged</li>
-          <li>No smooth solution</li>
+          <li>No smooth solution because icons don't dance but they are painted violentry</li>
         </ul>
         <div class="center">
           <img src="images/fail.png"></img>
@@ -375,7 +388,7 @@ var sIcons = Array.prototype.slice.call(icons, 0, icons.length);</pre>
           <li>Calculate what icons are between the hidden and overlapped icons</li>
           <li>Apply translations to them to reach the new location (upward, forward,...). When the transition is finished (transitionend event)</li>
           <ul>
-            <li>Save new locations in dateset attribute for each icon to be ready for consecutive translations</li>
+            <li>Save new locations in dataset attribute for each icon to be ready for consecutive translations</li>
             <ul>
               <li>
                 <a href="https://github.com/mozilla-b2g/gaia/blob/master/apps/homescreen/js/page.js#L889">Source code</a>
@@ -404,27 +417,12 @@ var sIcons = Array.prototype.slice.call(icons, 0, icons.length);</pre>
           <pre>
 document.dispatchEvent(new <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">CustomEvent</a>('ongridready'));
 document.addEventListener('ongridready', function onGridReady() {
-  // The animation of re-arrange finishes
+  // Re-arrange transitions finished
 });</pre>
           <li>
             Don't forget to remove listeners for <a href="https://developer.mozilla.org/en-US/docs/Web/Reference/Events/transitionend">transitionend</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/Reference/Events/animationend">animationend</a>, etc... in order no to consume more memory
           </li>
         </ul>
-      </article>
-
-      <article>
-        <h1>
-          System task switcher
-        </h1>
-      </article>
-
-      <article>
-        <h3>
-          What can we develop with CSS3 technology?
-        </h3>
-        <div class="center">
-          <iframe class="video" src="http://www.youtube.com/embed/gq9qeR7Hl8M?rel=0" frameborder="0" allowfullscreen></iframe>
-        </div>
       </article>
 
       <article>
